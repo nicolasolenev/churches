@@ -1,4 +1,4 @@
-export const API_KEY = 'AIzaSyDW5ppY8dyK9SxVMSobU82o1MxHS0UwYsg';
+export const API_KEY = '';
 
 export const ENDPOINT = 'https://apiv4.updateparishdata.org/Churchs/';
 

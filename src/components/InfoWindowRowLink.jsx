@@ -1,19 +1,12 @@
 import React from 'react';
-import { getChurchData } from '../functions';
 
-export default function InfoWindowRowLink({ selectedPlace, churches }) {
+export default function InfoWindowRowLink({ text }) {
   return (
-    selectedPlace.name &&
-    getChurchData(churches, selectedPlace)?.url && (
+    text && (
       <div>
-        Site:
-        <a
-          className="church-site-link"
-          href={
-            selectedPlace.name && getChurchData(churches, selectedPlace)?.url
-          }
-        >
-          {selectedPlace.name && getChurchData(churches, selectedPlace)?.url}
+        site:
+        <a className="church-site-link" href={text}>
+          {text}
         </a>
       </div>
     )

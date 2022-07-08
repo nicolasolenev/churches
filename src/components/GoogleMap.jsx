@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Map, InfoWindow, Marker, GoogleApiWrapper } from 'google-maps-react';
 
 import { API_KEY, INITIAL_CITY_COORDS } from '../vars';
@@ -7,19 +7,26 @@ import InfoWindowRowLink from './InfoWindowRowLink';
 
 export function MapContainer({ google, coords, churches }) {
   const [activeMarker, setActiveMarker] = useState({});
-  const [selectedPlace, setSelectedPlace] = useState({});
   const [showingInfoWindow, setShowingInfoWindow] = useState(false);
+  const [churchData, setChurchData] = useState({});
 
-  function onMarkerClick(props, marker) {
-    setActiveMarker(marker);
-    setSelectedPlace(props);
-    setShowingInfoWindow(true);
-  }
+  useEffect(() => {
+    console.log(coords);
+  });
 
-  function onInfoWindowClose() {
+  const onMarkerClick = useCallback(
+    (props, marker) => {
+      setActiveMarker(marker);
+      setShowingInfoWindow(true);
+      setChurchData(churches[props.id]);
+    },
+    [churches]
+  );
+
+  const onInfoWindowClose = () => {
     setActiveMarker(null);
     setShowingInfoWindow(false);
-  }
+  };
 
   return (
     <Map
@@ -34,8 +41,8 @@ export function MapContainer({ google, coords, churches }) {
         return (
           <Marker
             key={id}
+            id={id}
             onClick={onMarkerClick}
-            name={`name: ${church.name}`}
             position={{ lat: church.latitude, lng: church.longitude }}
           />
         );
@@ -47,28 +54,10 @@ export function MapContainer({ google, coords, churches }) {
         visible={showingInfoWindow}
       >
         <div>
-          <InfoWindowRow
-            type="name"
-            churches={churches}
-            selectedPlace={selectedPlace}
-          />
-
-          <InfoWindowRow
-            type="address"
-            churches={churches}
-            selectedPlace={selectedPlace}
-          />
-
-          <InfoWindowRow
-            type="phone"
-            churches={churches}
-            selectedPlace={selectedPlace}
-          />
-
-          <InfoWindowRowLink
-            churches={churches}
-            selectedPlace={selectedPlace}
-          />
+          <InfoWindowRow type="name" text={churchData.name} />
+          <InfoWindowRow type="address" text={churchData.address} />
+          <InfoWindowRow type="phone" text={churchData.phone} />
+          <InfoWindowRowLink text={churchData.url} />
         </div>
       </InfoWindow>
     </Map>
